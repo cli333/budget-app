@@ -4,6 +4,8 @@ export const BillContext = createContext();
 
 const BillProvider = ({ children }) => {
 	const [bills, setBills] = useState([]);
+	const [selectedCostInterval, setSelectedCostInterval] = useState('Monthly');
+	const [editModeEnabled, setEditModeEnabled] = useState(false);
 
 	const alphabetical = bills => bills.sort((a, b) => (a.title.toUpperCase() < b.title.toUpperCase() ? -1 : 1));
 
@@ -14,10 +16,6 @@ const BillProvider = ({ children }) => {
 			setBills(JSON.parse(JSONbills) || []);
 		})();
 	}, [setBills]);
-
-	useEffect(() => {
-		console.log(bills);
-	}, [bills]);
 
 	const updateBills = bill => {
 		const updatedBills = alphabetical([...bills, bill]);
@@ -32,12 +30,23 @@ const BillProvider = ({ children }) => {
 		setBills(updatedBills);
 	};
 
+	const deleteBill = billToDelete => {
+		const billsFiltered = bills.filter(bill => bill.title !== billToDelete.title);
+		localStorage.setItem('bills', JSON.stringify(billsFiltered));
+		setBills(billsFiltered);
+	};
+
 	return (
 		<BillContext.Provider
 			value={{
 				bills,
 				updateBills,
 				editBill,
+				selectedCostInterval,
+				setSelectedCostInterval,
+				editModeEnabled,
+				setEditModeEnabled,
+				deleteBill,
 			}}
 		>
 			{children}

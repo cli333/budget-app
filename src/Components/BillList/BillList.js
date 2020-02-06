@@ -3,9 +3,12 @@ import './style.css';
 import { BillContext } from '../../Context/BillContext';
 
 const BillList = () => {
-	const { bills, editBill } = useContext(BillContext);
+	const { bills, editBill, setEditModeEnabled } = useContext(BillContext);
 	return (
 		<div className="bill-list-container">
+			<div className="edit-mode-btn" onClick={() => setEditModeEnabled(true)}>
+				Edit
+			</div>
 			{bills.map((bill, index) => (
 				<div key={index} className="bill-list-row">
 					<input
